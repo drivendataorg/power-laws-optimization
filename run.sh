@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# build the container
 docker build -t power-laws-optimization/simulate .
 
 # limit container to 1 cpu, 4g RAM, no swap

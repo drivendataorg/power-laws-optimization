@@ -1,19 +1,19 @@
 FROM continuumio/anaconda3:latest
 
-# requirements first so they are cached
+# Install requirements first so they are cached
 RUN mkdir /simulation
 COPY ./requirements.txt /simulation/requirements.txt
 
 WORKDIR /simulation
 RUN pip install -r requirements.txt
 
-# For storing results from multiple runs
+# Use this volume for storing results from multiple runs during development
 VOLUME ["/all_results"]
 
-# get latest code
+# Copy the latest code to the container
 ADD . /simulation
+
 RUN chmod +x entrypoint.sh
 
-# CMD ["timeout", "10s", "sleep", "20s"]
-# CMD ["timeout", "10s", "python", "simulate/simulate.py"]
+# Execute the entrypoint.sh script inside the container when we do docker run
 ENTRYPOINT /simulation/entrypoint.sh
