@@ -1,0 +1,4 @@
+# ignore files inside data folders
+data/*
+all_results/*
+output/*
