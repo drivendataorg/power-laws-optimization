@@ -33,7 +33,7 @@ File | Description
 `├── requirements.txt` | The Python libraries that will be installed. Only the libraries in this official repo will be available.
 `├── run.sh` | The only command you need. Builds and runs simulations in the Docker container.
 `└── simulate` | The Python code for the simulation.
-`    ├── __init__.py` |
-`    ├── battery.py` | Contains an object for storing information about the battery.
-`    ├── battery_controller.py` | Implemented by competitors
-`    └── simulate.py` | Main entrypoint. Controls and executes the simulations.
+`.   ├── __init__.py` |
+`.   ├── battery.py` | Contains an object for storing information about the battery.
+`.   ├── battery_controller.py` | Implemented by competitors
+`.   └── simulate.py` | Main entrypoint. Controls and executes the simulations.
