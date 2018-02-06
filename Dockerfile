@@ -16,4 +16,4 @@ ADD . /simulation
 RUN chmod +x entrypoint.sh
 
 # Execute the entrypoint.sh script inside the container when we do docker run
-ENTRYPOINT /simulation/entrypoint.sh
+ENTRYPOINT ["/simulation/entrypoint.sh"]

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-timeout 10m python simulate/simulate.py
+timeout 30m python simulate/simulate.py
 
 if [ -f "output/results.csv" ]
 then
@@ -10,5 +10,5 @@ then
     echo ""
     mv output/results.csv /all_results/results_$(date +"%Y-%m-%d-%H:%M:%S").csv
 else
-    echo "ERROR: Script did not finish within 10 minute timeout."
+    echo "ERROR: Script did execute correctly or timed out."
 fi
