@@ -8,7 +8,7 @@ then
     echo ""
     cat output/results.csv
     echo ""
-    mv output/results.csv /all_results/results_$(date +"%Y-%m-%d-%H:%M:%S").csv
+    mv output/results.csv /all_results/results_$(date +"%Y-%m-%d-%H_%M_%S").csv
 else
     echo "ERROR: Script did execute correctly or timed out."
 fi

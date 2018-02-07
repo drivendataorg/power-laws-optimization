@@ -183,4 +183,5 @@ if __name__ == '__main__':
 
     # write all results out to a file
     results_df = pd.DataFrame(results).set_index('run_id')
+    results_df = results_df[['site_id', 'battery_id', 'money_spent', 'money_no_batt', 'score']]
     results_df.to_csv(output_dir/'results.csv')
