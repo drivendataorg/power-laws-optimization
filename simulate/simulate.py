@@ -15,18 +15,21 @@ class Simulation(object):
     def __init__(self,
                  data,
                  battery,
+                 site_id,
                  actual_previous_load=0.0,
                  actual_previous_pv=0.0):
         """ Creates initial simulation state based on data passed in.
 
             :param data: contains all the time series needed over the considered period
             :param battery: is a battery instantiated with 0 charge and the relevant properties
+            :param site_id: the id for the site (building)
             :param actual_previous_load: (optional) of the timestep right before the simulation starts (default=0)
             :param actual_previous_load: (optional) actual_previous_pv of the timestep right before the simulation
                 starts (default=0)
         """
 
         self.data = data
+        self.site_id = site_id
         self.load_columns = data.columns.str.startswith('load_')
         self.pv_columns = data.columns.str.startswith('pv_')
         self.price_sell_columns = data.columns.str.startswith('price_sell_')
@@ -50,7 +53,7 @@ class Simulation(object):
         """
         battery_controller = BatteryContoller()
 
-        for current_time, timestep in tqdm(self.data.iterrows(), total=self.data.shape[0], desc='timesteps'):
+        for current_time, timestep in tqdm(self.data.iterrows(), total=self.data.shape[0], desc=' > > > > timesteps\t'):
             self.simulate_timestep(battery_controller, current_time, timestep)
 
         return self.money_spent, self.money_spent_without_battery
@@ -66,6 +69,7 @@ class Simulation(object):
         """
         # get proposed state of charge from the battery controller
         proposed_state_of_charge = battery_controller.propose_state_of_charge(
+            self.site_id,
             current_time,
             self.battery,
             self.actual_previous_load,
@@ -151,7 +155,7 @@ if __name__ == '__main__':
     results = []
 
     # # execute two runs with each battery for every row in the metadata file:
-    for site_id, parameters in tqdm(metadata.iterrows(), desc='sites', total=metadata.shape[0]):
+    for site_id, parameters in tqdm(metadata.iterrows(), desc='sites\t\t\t', total=metadata.shape[0]):
         site_data_path = data_dir/"submit"/f"{site_id}.csv"
 
         if site_data_path.exists():
@@ -159,29 +163,32 @@ if __name__ == '__main__':
                                     parse_dates=['timestamp'],
                                     index_col='timestamp')
 
-            for run_id in [1, 2]:
+            for batt_id in tqdm([1, 2], desc=' > batteries \t\t'):
                 # create the battery for this run
-                batt = Battery(capacity=parameters[f"Battery_{run_id}_Capacity"],
-                               charging_power_limit=parameters[f"Battery_{run_id}_Power"],
-                               discharging_power_limit=-parameters[f"Battery_{run_id}_Power"],
-                               charging_efficiency=parameters[f"Battery_{run_id}_Charge_Efficiency"],
-                               discharging_efficiency=parameters[f"Battery_{run_id}_Discharge_Efficiency"])
+                batt = Battery(capacity=parameters[f"Battery_{batt_id}_Capacity"],
+                               charging_power_limit=parameters[f"Battery_{batt_id}_Power"],
+                               discharging_power_limit=-parameters[f"Battery_{batt_id}_Power"],
+                               charging_efficiency=parameters[f"Battery_{batt_id}_Charge_Efficiency"],
+                               discharging_efficiency=parameters[f"Battery_{batt_id}_Discharge_Efficiency"])
 
-                # execute the simulation
-                sim = Simulation(site_data, batt)
-                money_spent, money_no_batt = sim.run()
+                # execute the simulation for each simulation period in the data
+                n_periods = site_data.period_id.nunique()
+                for g_id, g_df in tqdm(site_data.groupby('period_id'), total=n_periods, desc=' > > periods\t\t'):
+                    sim = Simulation(g_df, batt, site_id)
+                    money_spent, money_no_batt = sim.run()
 
-                # store the results
-                results.append({
-                    'run_id': f"{site_id}_{run_id}",
-                    'site_id': site_id,
-                    'battery_id': run_id,
-                    'money_spent': money_spent,
-                    'money_no_batt': money_no_batt,
-                    'score': money_spent / money_no_batt,
-                })
+                    # store the results
+                    results.append({
+                        'run_id': f"{site_id}_{batt_id}_{g_id}",
+                        'site_id': site_id,
+                        'battery_id': batt_id,
+                        'period_id': g_id,
+                        'money_spent': money_spent,
+                        'money_no_batt': money_no_batt,
+                        'score': money_spent / money_no_batt,
+                    })
 
     # write all results out to a file
     results_df = pd.DataFrame(results).set_index('run_id')
-    results_df = results_df[['site_id', 'battery_id', 'money_spent', 'money_no_batt', 'score']]
+    results_df = results_df[['site_id', 'battery_id', 'period_id', 'money_spent', 'money_no_batt', 'score']]
     results_df.to_csv(output_dir/'results.csv')

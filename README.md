@@ -19,7 +19,7 @@ This code exists to make it easy for competitors to test their solutions.
 
 ## Running the simulation
  1. Clone this repository
- 2. Add the data from the competition to the `data` folder. The script expects a folder named `submit` and a file called `metadata.csv` in the `data` directory.  
+ 2. Add the data from the competition to the `data` folder. The script expects a folder named `submit` and a file called `metadata.csv` in the `data` directory.
  3. Copy your implementation of `battery_controller.py` into `simulate/battery_controller.py`
  4. Execute the run script: `./run.sh`
  5. Your results will be stored and timestamped in the `all_results` folder each time you execute `run.sh` (Note: `results.csv` in `output` will be overwritten on each subsequent run.)
@@ -28,13 +28,25 @@ This code exists to make it easy for competitors to test their solutions.
 
 The only supported execution is within Docker. However, if you want to run the Python code locally rather than in a Docker container, you can still use the `entrypoint.sh` script on unix based system. You may need to install `coreutils` on your system in order to use the `timeout` command. For OSX you can run `brew install coreutils` and then update `entrypoint.sh` to call `gtimeout` instead of `timeout`. Windows users will need to create their own script, although for basic purposes just running `python simulate/simulate.py` should be sufficient.
 
+## Making a submission
+
+#### For the public leaderboard
+
+The public leaderboard just presents the mean of your results so far. Simply submit the most recent results from the `all_results` folder.
+
+#### Code submission
+
+You are required to submit your code in order to be considered for a prize. To do so, you must create a `zip` archive containing ONLY the `assets` folder and the `battery_controller.py` file. These are the only components you my submit. Other folders and files will be ignored.
+
+## Structure of this repo
+
 File | Description
 ---- | -----
 `├── data` | A directory that has all of the input data as `.csv`s that are provided by the competition. **Competitors must at the data themselves after downloading it from the competition.**
 `├── output` | A directory for storing the output of a single simulation run.
 `├── all_results` | This directory contains results from all of the runs executed.
 `├── simulate` | The Python code for the simulation.
-`·   ├── __init__.py` |
+`·   ├── assets` | ** A FOLDER FOR ANY TRAINED MODELS/DATA THAT NEEDS TO BE LOADED BY `battery_controller.py`
 `·   ├── battery.py` | Contains an object for storing information about the battery.
 `·   ├── simulate.py` | Main entrypoint. Controls and executes the simulations.
 `·   └── battery_controller.py` | **THIS FILE SHOULD BE IMPLEMENTED BY COMPETITORS**

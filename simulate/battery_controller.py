@@ -14,6 +14,7 @@ class BatteryContoller(object):
         quarter, i.e., at time t+15 minutes.
 
         The arguments to propose_state_of_charge are as follows:
+        :param site_id: The current site (building) id in case the model does different work per site
         :param timestamp: The current timestamp inlcuding time of day and date
         :param battery: The battery (see battery.py for useful properties, including current_charge and capacity)
         :param actual_previous_load: The actual load of the previous quarter.
@@ -30,6 +31,7 @@ class BatteryContoller(object):
         :returns: proposed state of charge, a float between 0 (empty) and 1 (full).
     """
     def propose_state_of_charge(self,
+                                site_id,
                                 timestamp,
                                 battery,
                                 actual_previous_load,
