@@ -1,18 +1,12 @@
-import os
-
-from pathlib import Path
-import pandas as pd
-
-
 class Battery(object):
-    """
-        - initial_battery_state_of_charge is the initial state of charge of the
-          battery (0.0 in our examples)
-        - battery_capacity is the battery capacity in Wh
-        - battery_charging_power_limit in W
-        - battery_discharging_power_limit in W (counted negatively)
-        - battery_charging_efficiency
-        - battery_discharging_efficiency
+    """ Used to store information about the battery.
+
+       :param current_charge: is the initial state of charge of the battery
+       :param capacity: is the battery capacity in Wh
+       :param charging_power_limit: the limit of the power that can charge the battery in W
+       :param discharging_power_limit: the limit of the power that can discharge the battery in W
+       :param battery_charging_efficiency: The efficiecny of the battery when charging
+       :param battery_discharing_efficiecny: The discharging efficiency
     """
     def __init__(self,
                  current_charge=0.0,

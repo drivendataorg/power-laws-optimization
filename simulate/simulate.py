@@ -11,14 +11,6 @@ from battery import Battery
 
 class Simulation(object):
     """ Handles running a simulation.
-
-        Each simulation concerns a given period (typically 10 days).
-
-        The arguments to the constructor are as follows:
-        - data contains all the time series needed over the considered period
-        - battery is a battery instantiated with 0 charge and the relevant properties
-        - actual_previous_load of the timestep right before the simulation starts
-        - actual_previous_pv of the timestep right before the simulation starts
     """
     def __init__(self,
                  data,
@@ -26,8 +18,19 @@ class Simulation(object):
                  actual_previous_load=0.0,
                  actual_previous_pv=0.0):
         """ Creates initial simulation state based on data passed in.
+
+            :param data: contains all the time series needed over the considered period
+            :param battery: is a battery instantiated with 0 charge and the relevant properties
+            :param actual_previous_load: (optional) of the timestep right before the simulation starts (default=0)
+            :param actual_previous_load: (optional) actual_previous_pv of the timestep right before the simulation
+                starts (default=0)
         """
+
         self.data = data
+        self.load_columns = data.columns.str.startswith('load_')
+        self.pv_columns = data.columns.str.startswith('pv_')
+        self.price_sell_columns = data.columns.str.startswith('price_sell_')
+        self.price_buy_columns = data.columns.str.startswith('price_buy_')
 
         # initialize money at 0.0
         self.money_spent = 0.0
@@ -54,24 +57,23 @@ class Simulation(object):
 
     def simulate_timestep(self, battery_controller, current_time, timestep):
         """ Executes a single timestep using `battery_controller` to get
-            a proposed state of charge.
-        """
-        # construct the arrays from the data and get previous load and pv production
-        load_columns = timestep.index.str.startswith('load_')
-        pv_columns = timestep.index.str.startswith('pv_')
-        price_sell_columns = timestep.index.str.startswith('price_sell_')
-        price_buy_columns = timestep.index.str.startswith('price_buy_')
+            a proposed state of charge and then calculating the cost of
+            making those changes.
 
+            :param battery_controller: The battery controller
+            :param current_time: the timestamp of the current time step
+            :param timestep: the data available at this timestep
+        """
         # get proposed state of charge from the battery controller
         proposed_state_of_charge = battery_controller.propose_state_of_charge(
             current_time,
             self.battery,
             self.actual_previous_load,
             self.actual_previous_pv,
-            timestep[price_buy_columns].values,
-            timestep[price_sell_columns].values,
-            timestep[load_columns].values,
-            timestep[pv_columns].values
+            timestep[self.price_buy_columns],
+            timestep[self.price_sell_columns],
+            timestep[self.load_columns],
+            timestep[self.pv_columns]
         )
 
         # get energy required to achieve the proposed state of charge
@@ -80,16 +82,15 @@ class Simulation(object):
                                                                           timestep.actual_consumption,
                                                                           timestep.actual_pv)
 
-        grid_energy_without_battery, _ = self.simulate_battery_charge(0.0,
-                                                                      0.0,
-                                                                      timestep.actual_consumption,
-                                                                      timestep.actual_pv)
+        grid_energy_without_battery = timestep.actual_consumption - timestep.actual_pv
 
         # buy or sell energy depending on needs
         price = timestep.price_buy_00 if grid_energy >= 0 else timestep.price_sell_00
         price_without_battery = timestep.price_buy_00 if grid_energy_without_battery >= 0 else timestep.price_sell_00
-        self.money_spent += grid_energy * price
-        self.money_spent_without_battery += grid_energy_without_battery * price_without_battery
+
+        # calculate spending based on price per kWh and energy per Wh
+        self.money_spent += grid_energy * (price / 1000.)
+        self.money_spent_without_battery += grid_energy_without_battery * (price_without_battery / 1000.)
 
         # update current state of charge
         self.battery.current_charge += battery_energy_change / self.battery.capacity
@@ -98,7 +99,12 @@ class Simulation(object):
 
     def simulate_battery_charge(self, initial_state_of_charge, proposed_state_of_charge, actual_consumption, actual_pv):
         """ Charges or discharges the battery based on what is desired and
-            available energy from grid and pv
+            available energy from grid and pv.
+
+            :param initial_state_of_charge: the current state of the battery
+            :param proposed_state_of_charge: the proposed state for the battery
+            :param actual_consumption: the actual energy consumed by the building
+            :param actual_pv: the actual pv energy produced and available to the building
         """
         # charge is bounded by what is feasible
         proposed_state_of_charge = np.clip(proposed_state_of_charge, 0.0, 1.0)
@@ -106,7 +112,7 @@ class Simulation(object):
         # calculate proposed energy change in the battery
         target_energy_change = (proposed_state_of_charge - initial_state_of_charge) * self.battery.capacity
 
-        # efficiency is different whether we intend to charge or discharge
+        # efficiency can be different whether we intend to charge or discharge
         if target_energy_change >= 0:
             efficiency = self.battery.charging_efficiency
             target_charging_power = target_energy_change / ((15. / 60.) * efficiency)
@@ -133,7 +139,9 @@ class Simulation(object):
 
 
 if __name__ == '__main__':
-    data_dir = (Path(__file__)/os.pardir/os.pardir/'data').resolve()
+    simulation_dir = (Path(__file__)/os.pardir/os.pardir).resolve()
+    data_dir = simulation_dir/'data'
+    output_dir = simulation_dir/'output'
 
     # load available metadata to determine the runs
     metadata_path = data_dir/'metadata.csv'
@@ -144,7 +152,7 @@ if __name__ == '__main__':
 
     # # execute two runs with each battery for every row in the metadata file:
     for site_id, parameters in tqdm(metadata.iterrows(), desc='sites', total=metadata.shape[0]):
-        site_data_path = data_dir/f"{site_id}.csv"
+        site_data_path = data_dir/"submit"/f"{site_id}.csv"
 
         if site_data_path.exists():
             site_data = pd.read_csv(site_data_path,
@@ -170,11 +178,9 @@ if __name__ == '__main__':
                     'battery_id': run_id,
                     'money_spent': money_spent,
                     'money_no_batt': money_no_batt,
-                    'score': (money_spent - money_no_batt) / money_no_batt,
+                    'score': money_spent / money_no_batt,
                 })
 
     # write all results out to a file
     results_df = pd.DataFrame(results).set_index('run_id')
-    out_path = (Path(__file__)/os.pardir/os.pardir/'output'/'results.csv').resolve()
-    results_df.to_csv(out_path)
-
+    results_df.to_csv(output_dir/'results.csv')
