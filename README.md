@@ -36,7 +36,7 @@ The public leaderboard just presents the mean of your results so far. Simply sub
 
 #### Code submission
 
-You are required to submit your code in order to be considered for a prize. To do so, you must create a `zip` archive containing ONLY the `assets` folder and the `battery_controller.py` file. These are the only components you my submit. Other folders and files will be ignored.
+You are required to submit your code in order to be considered for a prize. To do so, you must create a `zip` archive containing ONLY the `assets` folder and the `battery_controller.py` file. These are the only components you may submit. Other folders and files will be ignored. Instructions for submitting are on the competition page.
 
 ## Structure of this repo
 
@@ -46,7 +46,7 @@ File | Description
 `├── output` | A directory for storing the output of a single simulation run.
 `├── all_results` | This directory contains results from all of the runs executed.
 `├── simulate` | The Python code for the simulation.
-`·   ├── assets` | ** A FOLDER FOR ANY TRAINED MODELS/DATA THAT NEEDS TO BE LOADED BY `battery_controller.py`
+`·   ├── assets` | **A FOLDER FOR ANY TRAINED MODELS/DATA THAT NEEDS TO BE LOADED BY `battery_controller.py`**
 `·   ├── battery.py` | Contains an object for storing information about the battery.
 `·   ├── simulate.py` | Main entrypoint. Controls and executes the simulations.
 `·   └── battery_controller.py` | **THIS FILE SHOULD BE IMPLEMENTED BY COMPETITORS**
