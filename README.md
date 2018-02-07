@@ -1,3 +1,13 @@
+<div style="width: 100%">
+    <span style="width: 57%">
+        <img src="https://s3.amazonaws.com/drivendata-public-assets/se-challenge-3-banner.jpg"/>
+    </span>
+    &nbsp;
+    <span style="width: 57%">
+        <img src="https://s3.amazonaws.com/drivendata-public-assets/logo-white-blue.png"/>
+    </span>
+</div>
+
  # Power Laws: Optimizing Demand-side Strategies
 
  ### For more about this repository, see the competition page:
@@ -28,10 +38,10 @@ File | Description
 `├── output` | A directory for storing the output of a single simulation run.
 `├── all_results` | This directory contains results from all of the runs executed.
 `├── simulate` | The Python code for the simulation.
-`|   ├── __init__.py` |
-`|   ├── battery.py` | Contains an object for storing information about the battery.
-`|   ├── battery_controller.py` | Implemented by competitors
-`|   └── simulate.py` | Main entrypoint. Controls and executes the simulations.
+`    ├── __init__.py` |
+`    ├── battery.py` | Contains an object for storing information about the battery.
+`    ├── battery_controller.py` | Implemented by competitors
+`    └── simulate.py` | Main entrypoint. Controls and executes the simulations.
 `├── Dockerfile` | The definition for the Docker container on which the simulation executes.
 `├── README.md` | About the project.
 `├── entrypoint.sh` | Called inside the container to execute the simulation. Can also be used locally.
