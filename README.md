@@ -1,17 +1,13 @@
-<div style="width: 100%">
-    <span style="width: 57%">
-        <img src="https://s3.amazonaws.com/drivendata-public-assets/se-challenge-3-banner.jpg"/>
-    </span>
-    &nbsp;
-    <span style="width: 57%">
-        <img src="https://s3.amazonaws.com/drivendata-public-assets/logo-white-blue.png"/>
-    </span>
-</div>
+<a href="https://www.drivendata.org/competitions/53/optimize-photovoltaic-battery/">
+    <img src="https://s3.amazonaws.com/drivendata-public-assets/se-challenge-3-banner.jpg"/>
+</a>
 
- # Power Laws: Optimizing Demand-side Strategies
+# Power Laws: Optimizing Demand-side Strategies
 
  ### For more about this repository, see the competition page:
  ### https://www.drivendata.org/competitions/53/optimize-photovoltaic-battery/
+
+
 
 This repository contains the example implementation for how the optimization challenge code will be executed at the end of the competition. Competitors are required to only implement a single method `propose_state` within the file `battery_controller.py`.
 
@@ -47,3 +43,8 @@ File | Description
 `├── entrypoint.sh` | Called inside the container to execute the simulation. Can also be used locally.
 `├── requirements.txt` | The Python libraries that will be installed. Only the libraries in this official repo will be available.
 `└── run.sh` | The only command you need. Builds and runs simulations in the Docker container.
+
+<a href="http://www.drivendata.org">
+    <img src="https://s3.amazonaws.com/drivendata-public-assets/logo-white-blue.png"/>
+</a>
+
