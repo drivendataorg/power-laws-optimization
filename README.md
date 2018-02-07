@@ -19,7 +19,7 @@ This code exists to make it easy for competitors to test their solutions.
 
 ## Running the simulation
  1. Clone this repository
- 2. Add the data from the competition to the `data` folder
+ 2. Add the data from the competition to the `data` folder. The script expects a folder named `submit` and a file called `metadata.csv` in the `data` directory.  
  3. Copy your implementation of `battery_controller.py` into `simulate/battery_controller.py`
  4. Execute the run script: `./run.sh`
  5. Your results will be stored and timestamped in the `all_results` folder each time you execute `run.sh` (Note: `results.csv` in `output` will be overwritten on each subsequent run.)
@@ -30,7 +30,7 @@ The only supported execution is within Docker. However, if you want to run the P
 
 File | Description
 ---- | -----
-`├── data` | A directory that has all of the input data as `.csv`s that are provided by the competition.
+`├── data` | A directory that has all of the input data as `.csv`s that are provided by the competition. **Competitors must at the data themselves after downloading it from the competition.**
 `├── output` | A directory for storing the output of a single simulation run.
 `├── all_results` | This directory contains results from all of the runs executed.
 `├── simulate` | The Python code for the simulation.
