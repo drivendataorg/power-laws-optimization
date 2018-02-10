@@ -29,6 +29,12 @@ class Simulation(object):
         """
 
         self.data = data
+
+        # align actual as the following, not the previous 15 minutes to
+        # simplify simulation
+        self.data.loc[:, 'actual_consumption'] = self.data.actual_consumption.shift(-1)
+        self.data.loc[:, 'actual_pv'] = self.data.actual_pv.shift(-1)
+
         self.site_id = site_id
         self.load_columns = data.columns.str.startswith('load_')
         self.pv_columns = data.columns.str.startswith('pv_')
@@ -54,7 +60,9 @@ class Simulation(object):
         battery_controller = BatteryContoller()
 
         for current_time, timestep in tqdm(self.data.iterrows(), total=self.data.shape[0], desc=' > > > > timesteps\t'):
-            self.simulate_timestep(battery_controller, current_time, timestep)
+            # can't calculate results without actual, so skip (should only be last row)
+            if pd.notnull(timestep.actual_consumption):
+                self.simulate_timestep(battery_controller, current_time, timestep)
 
         return self.money_spent, self.money_spent_without_battery
 
