@@ -15,20 +15,19 @@ class Simulation(object):
     def __init__(self,
                  data,
                  battery,
-                 site_id,
-                 actual_previous_load=0.0,
-                 actual_previous_pv=0.0):
+                 site_id):
         """ Creates initial simulation state based on data passed in.
 
             :param data: contains all the time series needed over the considered period
             :param battery: is a battery instantiated with 0 charge and the relevant properties
             :param site_id: the id for the site (building)
-            :param actual_previous_load: (optional) of the timestep right before the simulation starts (default=0)
-            :param actual_previous_load: (optional) actual_previous_pv of the timestep right before the simulation
-                starts (default=0)
         """
 
         self.data = data
+
+        # building initialization
+        self.actual_previous_load = self.data.actual_consumption.values[0]
+        self.actual_previous_pv = self.data.actual_pv.values[0]
 
         # align actual as the following, not the previous 15 minutes to
         # simplify simulation
@@ -47,10 +46,6 @@ class Simulation(object):
 
         # battery initialization
         self.battery = battery
-
-        # building initialization
-        self.actual_previous_load = actual_previous_load
-        self.actual_previous_pv = actual_previous_pv
 
     def run(self):
         """ Executes the simulation by iterating through each of the data points
