@@ -42,7 +42,7 @@ You are required to submit your code in order to be considered for a prize. To d
 
 File | Description
 ---- | -----
-`├── data` | A directory that has all of the input data as `.csv`s that are provided by the competition. **Competitors must at the data themselves after downloading it from the competition.**
+`├── data` | A directory that has all of the input data as `.csv`s that are provided by the competition. **Competitors must add the data themselves after downloading it from the competition.**
 `├── output` | A directory for storing the output of a single simulation run.
 `├── all_results` | This directory contains results from all of the runs executed.
 `├── simulate` | The Python code for the simulation.
