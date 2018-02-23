@@ -168,9 +168,10 @@ if __name__ == '__main__':
 
             for batt_id in tqdm([1, 2], desc=' > batteries \t\t'):
                 # create the battery for this run
-                batt = Battery(capacity=parameters[f"Battery_{batt_id}_Capacity"],
-                               charging_power_limit=parameters[f"Battery_{batt_id}_Power"],
-                               discharging_power_limit=-parameters[f"Battery_{batt_id}_Power"],
+                # (Note: Quantities in kW are converted to watts here)
+                batt = Battery(capacity=parameters[f"Battery_{batt_id}_Capacity"] * 1000,
+                               charging_power_limit=parameters[f"Battery_{batt_id}_Power"] * 1000,
+                               discharging_power_limit=-parameters[f"Battery_{batt_id}_Power"] * 1000,
                                charging_efficiency=parameters[f"Battery_{batt_id}_Charge_Efficiency"],
                                discharging_efficiency=parameters[f"Battery_{batt_id}_Discharge_Efficiency"])
 
