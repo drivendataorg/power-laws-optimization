@@ -1,5 +1,7 @@
 FROM continuumio/anaconda3:latest
 
+RUN apt-get update && apt-get install -y build-essential
+
 # Install requirements first so they are cached
 RUN mkdir /simulation
 COPY ./requirements.txt /simulation/requirements.txt
