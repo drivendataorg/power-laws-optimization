@@ -133,10 +133,7 @@ class Simulation(object):
                                         self.battery.charging_power_limit)
 
         # actual energy change is based on the actual power possible and the efficiency
-        if actual_charging_power >= 0:
-            actual_energy_change = actual_charging_power * (15. / 60.) * efficiency
-        else:
-            actual_energy_change = actual_charging_power * (15. / 60.) / efficiency
+        actual_energy_change = actual_charging_power * (15. / 60.) / efficiency
 
         # what we need from the grid = (the power put into the battery + the consumption) - what is available from pv
         grid_energy = (actual_charging_power * (15. / 60.) + actual_consumption) - actual_pv
