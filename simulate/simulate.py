@@ -189,7 +189,7 @@ if __name__ == '__main__':
                         'period_id': g_id,
                         'money_spent': money_spent,
                         'money_no_batt': money_no_batt,
-                        'score': money_spent / money_no_batt,
+                        'score': (money_spent - money_no_batt) / np.abs(money_no_batt),
                     })
 
     # write all results out to a file
