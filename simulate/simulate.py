@@ -178,6 +178,9 @@ if __name__ == '__main__':
                 # execute the simulation for each simulation period in the data
                 n_periods = site_data.period_id.nunique()
                 for g_id, g_df in tqdm(site_data.groupby('period_id'), total=n_periods, desc=' > > periods\t\t'):
+                    # reset battery to no charge before simulation
+                    batt.current_charge = 0
+
                     sim = Simulation(g_df, batt, site_id)
                     money_spent, money_no_batt = sim.run()
 
