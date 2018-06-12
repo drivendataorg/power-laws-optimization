@@ -1,0 +1,5 @@
+python 3
+tqdm
+pandas
+numpy
+keras (only necessary for computing the coeficients)

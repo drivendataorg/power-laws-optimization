@@ -1,0 +1,30 @@
+﻿1. To run the code, please install Ortools - version 6.7.4957
+
+2. The linear programming model is as follows:
+
+Variables:
+    charge[i]: charged energy of battery at step i (charge[i] >=0)
+    dis_charge[i]: discharged energy of battery at step i (dis_charge[i] <=0)
+    battery_power[i]: power of battery at step i (0 <= battery_power[i]  <= capacity)
+    grid[i]: energy bought from grid at step i (grid[i] > 0)
+         
+Objective
+	Minimize Z =∑_(i=0)^95 (grid[i]*(price_buy[i] - price_sell[i])+ charge[i]*(price_sell[i] + price_buy[i]/1000.)+dis_charge[i] * price_sell[i]) 	        
+
+Constraints
+    (1)	Initialize the power of battery   
+		battery_power[0] = capacity * battery.current_charge   
+
+    (2) The demand of building must be satisfied
+    		grid[i] – (charge[i] + dis_charge[i]) >= load_forecast[i] - pv_forecast[i]
+
+    (3) Relationship of battery power between two consecutive steps
+    		battery_power[i] + charge[i] * charging_efficiency + dis_charge[i]/discharging_efficiency = battery_power[i+1]
+
+	(4)	Charged energy must less than charging power limit
+			charge[i] <= charging_power_limit * (1/4.)
+
+	(5)	Discharged energy must be less than discharging power limit
+			dis_charge[i] >= discharging_power_limit* (1/4.)
+
+	
