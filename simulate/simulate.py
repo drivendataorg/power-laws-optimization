@@ -1,3 +1,4 @@
+from copy import deepcopy
 import os
 from pathlib import Path
 
@@ -74,7 +75,7 @@ class Simulation(object):
         proposed_state_of_charge = battery_controller.propose_state_of_charge(
             self.site_id,
             current_time,
-            self.battery,
+            deepcopy(self.battery),
             self.actual_previous_load,
             self.actual_previous_pv,
             timestep[self.price_buy_columns],
