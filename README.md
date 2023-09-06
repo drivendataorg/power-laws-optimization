@@ -18,7 +18,7 @@ This repository contains code from winning competitors in the [Power Laws: Optim
 
 **Winning code for other DrivenData competitions is available in the [competition-winners repository](https://github.com/drivendataorg/competition-winners).**
 
-This repository also contains the simulation engine code provided to competitors for testing their solutions. You can find the simulation engine code in the [`simulation_engine/`](simulation_engine/) subdirectory—see that subdirectory's README for more information.
+This repository also contains the simulation engine code provided to competitors for testing their solutions. You can find the simulation engine code in the [`simulation_engine/`](simulation_engine/) subdirectory—see that subdirectory's README for more information. This code is also open source under the MIT License.
 
 ## Final Results
 
@@ -32,7 +32,7 @@ Place |Team or User | Score | Summary of Model
 
 ---
 
-<a href="http://www.drivendata.org">
+<a href="https://www.drivendata.org">
     <img src="https://s3.amazonaws.com/drivendata-public-assets/logo-white-blue.png"/>
 </a>
 

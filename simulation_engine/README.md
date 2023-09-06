@@ -59,6 +59,6 @@ File | Description
 `├── requirements.txt` | The Python libraries that will be installed. Only the libraries in this official repo will be available.
 `└── run.sh` | The only command you need. Builds and runs simulations in the Docker container.
 
-<a href="http://www.drivendata.org">
+<a href="https://www.drivendata.org">
     <img src="https://s3.amazonaws.com/drivendata-public-assets/logo-white-blue.png"/>
 </a>
